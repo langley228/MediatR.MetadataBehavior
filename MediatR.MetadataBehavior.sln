@@ -1,0 +1,25 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio Version 17
+VisualStudioVersion = 17.13.35931.197
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MediatR.MetadataBehavior", "MediatR.MetadataBehavior\MediatR.MetadataBehavior.csproj", "{B8E2A1A5-DDE8-4DC9-931F-EB3943E00744}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{B8E2A1A5-DDE8-4DC9-931F-EB3943E00744}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{B8E2A1A5-DDE8-4DC9-931F-EB3943E00744}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{B8E2A1A5-DDE8-4DC9-931F-EB3943E00744}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{B8E2A1A5-DDE8-4DC9-931F-EB3943E00744}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {2131C673-A69E-4DE8-95EA-12E1DDD8255F}
+	EndGlobalSection
+EndGlobal
