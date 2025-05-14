@@ -4,17 +4,18 @@ MediatR.MetadataBehavior 是一個基於 MediatR 的擴展，用於實現基於 
 
 ## 功能特性
 
-- Metadata 驅動的行為處理：使用 MetadataAttribute 和 RequestAttribute 定義行為。
-- 自訂行為工廠：支持通過 IMetadataBehaviorFactory 和 DefaultMetadataBehaviorFactory 自訂行為處理邏輯。
-- 依賴注入支持：通過 ServiceCollectionHelper 自動註冊行為和工廠。
-- 靈活的行為組織：支持多層行為管道，並可設置默認行為。
+- **Metadata 驅動的行為處理**：使用 `MetadataAttribute` 和 `RequestAttribute` 定義行為。
+- **自訂行為工廠**：支持通過 `IMetadataBehaviorFactory` 和 `DefaultMetadataBehaviorFactory` 自訂行為處理邏輯。
+- **依賴注入支持**：通過 `ServiceCollectionHelper` 自動註冊行為和工廠。
+- **靈活的行為組織**：支持多層行為管道，並可設置默認行為。
 
 ## 使用方法
 
-1. 定義行為屬性
+### 1. 定義行為屬性
 
-使用 RequestAttribute、MetadataAttribute、DefaultMetadataAttribute 定義行為。例如：
+使用 `RequestAttribute`、`MetadataAttribute`、`DefaultMetadataAttribute` 定義行為。例如：
 
+#### 範例 1：直接定義行為
 ```csharp
 [Request]
 [DefaultMetadata(typeof(CustomBehavior1<>))]
@@ -25,8 +26,7 @@ public class MyRequest : IRequest<MyResponse>
 }
 ```
 
-或
-
+#### 範例 2：使用 Metadata 類型
 ```csharp
 [Request(metadataType: typeof(MyRequestMetadata))]
 public class MyRequest : IRequest<MyResponse>
@@ -38,10 +38,11 @@ public class MyRequest : IRequest<MyResponse>
 [Metadata(typeof(CustomBehavior2<>), isDefault: false)]
 public class MyRequestMetadata 
 {
+    // Metadata 定義
 }
 ```
-或
 
+#### 範例 3：自訂行為工廠
 ```csharp
 [Request(
         behaviorFactoryGenericType: typeof(MyMetadataBehaviorFactory<,>),
@@ -56,20 +57,25 @@ public class MyRequest : IRequest<MyResponse>
 [Metadata(typeof(CustomBehavior2<>), isDefault: false)]
 public class MyRequestMetadata 
 {
+    // Metadata 定義
 }
 ```
 
-2. 註冊行為
+---
 
-使用 ServiceCollectionHelper 註冊行為：
+### 2. 註冊行為
+
+使用 `ServiceCollectionHelper` 註冊行為：
 
 ```csharp
 services.AddMediatRAttributedBehaviors(typeof(MyRequest).Assembly);
 ```
 
-3. 實現自訂行為
+---
 
-實現 IMetadataBehavior<TRequest, TResponse> 接口來定義行為邏輯：
+### 3. 實現自訂行為
+
+實現 `IMetadataBehavior<TRequest, TResponse>` 接口來定義行為邏輯：
 
 ```csharp
 public class MyCustomBehavior<TRequest, TResponse> : 
@@ -87,16 +93,18 @@ public class MyCustomBehavior<TRequest, TResponse> :
 }
 ```
 
-4. 使用行為工廠
+---
 
-如果需要自訂行為工廠，繼承 MetadataBehaviorFactory<TRequest, TResponse> 並實現 MappingBehaviors 方法。例如：
+### 4. 使用行為工廠
+
+如果需要自訂行為工廠，繼承 `MetadataBehaviorFactory<TRequest, TResponse>` 並實現 `MappingBehaviors` 方法。例如：
 
 ```csharp
 public class MyMetadataBehaviorFactory<TRequest, TResponse> :
     MetadataBehaviorFactory<TRequest, TResponse>
     where TRequest : IRequest<TResponse>
 {
-    public DefaultMetadataBehaviorFactory(
+    public MyMetadataBehaviorFactory(
         IServiceProvider serviceProvider) : base(serviceProvider)
     {
     }
@@ -106,13 +114,13 @@ public class MyMetadataBehaviorFactory<TRequest, TResponse> :
         IEnumerable<IMetadataBehavior<TRequest, TResponse>> behaviors,
         Func<IEnumerable<IMetadataBehavior<TRequest, TResponse>>, CancellationToken, Task<TResponse>> next, CancellationToken cancellationToken)
     {
-        //自訂流程
+        // 自訂流程
         var behaviorNames = new List<string> 
         { 
             "CustomBehavior2",
             "CustomBehavior1"
         };
-        var findBehaviors =  behaviorNames.Select(name => behaviors.FirstOrDefault(b => GetBehaviorName(b.GetType()) == name));
+        var findBehaviors = behaviorNames.Select(name => behaviors.FirstOrDefault(b => GetBehaviorName(b.GetType()) == name));
         return next(findBehaviors, cancellationToken);
     }    
     
