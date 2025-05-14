@@ -10,10 +10,10 @@ namespace MediatR.PipelineExtensions.Helpers
 {
     public static class ServiceCollectionHelper
     {
-        public static IServiceCollection AddMediatRAttributedBehaviors(this IServiceCollection services, Assembly assembly)
-            => services.AddMediatRAttributedBehaviors(new[] { assembly });
+        public static IServiceCollection AddMediatRMetadataBehavior(this IServiceCollection services, Assembly assembly)
+            => services.AddMediatRMetadataBehavior(new[] { assembly });
 
-        public static IServiceCollection AddMediatRAttributedBehaviors(this IServiceCollection services, IEnumerable<Assembly> assemblies)
+        public static IServiceCollection AddMediatRMetadataBehavior(this IServiceCollection services, IEnumerable<Assembly> assemblies)
         {
             var requestsWithAttributes = assemblies
                 .Distinct()

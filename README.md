@@ -68,7 +68,7 @@ public class MyRequestMetadata
 使用 `ServiceCollectionHelper` 註冊行為：
 
 ```csharp
-services.AddMediatRAttributedBehaviors(typeof(MyRequest).Assembly);
+services.AddMediatRMetadataBehavior(typeof(MyRequest).Assembly);
 ```
 
 ---
