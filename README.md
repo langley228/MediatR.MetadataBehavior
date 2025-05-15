@@ -120,10 +120,10 @@ public class CustomBehaviorFactory<TRequest, TResponse> :
     {
         string[] behaviorNames = null;
 
-        // 自訂流程：檢查請求是否為 SampleRequest，並提取行為名稱
-        if (request is Models.CustomRequest sampleRequest)
+        // 自訂流程：檢查請求是否為 CustomRequest
+        if (request is CustomRequest customRequest)
         {
-            behaviorNames = sampleRequest.BehaviorNames;
+            behaviorNames = customRequest.BehaviorNames;
         }
 
         // 根據行為名稱篩選對應的行為
