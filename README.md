@@ -144,3 +144,7 @@ public class CustomBehaviorFactory<TRequest, TResponse> :
     }
 }
 ```
+
+### 5. 範例專案
+
+可以參考 `MediatR.MetadataBehavior.Sample` 專案，該專案展示了如何定義請求、行為和行為工廠，並通過 DI 容器註冊和執行行為管道。
