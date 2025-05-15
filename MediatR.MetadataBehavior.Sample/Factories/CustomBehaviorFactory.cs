@@ -32,7 +32,7 @@ namespace MediatR.MetadataBehavior.Sample.Factories
         /// <param name="next">下一個處理函式</param>
         /// <param name="cancellationToken">取消標記</param>
         /// <returns>處理後的回應</returns>
-        public override Task<TResponse> MappingBehaviors(
+        public override Task<TResponse> MapAndExecuteBehaviors(
             TRequest request,
             IEnumerable<IMetadataBehavior<TRequest, TResponse>> behaviors,
             Func<IEnumerable<IMetadataBehavior<TRequest, TResponse>>, CancellationToken, Task<TResponse>> next, 

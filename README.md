@@ -112,7 +112,7 @@ public class CustomBehaviorFactory<TRequest, TResponse> :
     {
     }
 
-    public override Task<TResponse> MappingBehaviors(
+    public override Task<TResponse> MapAndExecuteBehaviors(
         TRequest request,
         IEnumerable<IMetadataBehavior<TRequest, TResponse>> behaviors,
         Func<IEnumerable<IMetadataBehavior<TRequest, TResponse>>, CancellationToken, Task<TResponse>> next, 

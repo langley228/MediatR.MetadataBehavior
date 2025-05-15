@@ -22,7 +22,7 @@ namespace MediatR.MetadataBehavior.Models
         /// <param name="next">委派，用於執行管道中的下一個行為或處理器。</param>
         /// <param name="cancellationToken">取消操作的通知標記。</param>
         /// <returns>處理請求後的回應結果。</returns>
-        Task<TResponse> MappingBehaviors(
+        Task<TResponse> MapAndExecuteBehaviors(
             TRequest request,
             IEnumerable<IMetadataBehavior<TRequest, TResponse>> behaviors,
             Func<IEnumerable<IMetadataBehavior<TRequest, TResponse>>, CancellationToken, Task<TResponse>> next,
