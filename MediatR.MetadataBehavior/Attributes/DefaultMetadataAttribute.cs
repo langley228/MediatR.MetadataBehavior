@@ -2,7 +2,7 @@
 using System.Runtime.CompilerServices;
 using Microsoft.Extensions.DependencyInjection;
 
-namespace MediatR.PipelineExtensions.Attributes
+namespace MediatR.MetadataBehavior.Attributes
 {
     /// <summary>
     /// Mediatr Request 可使用自訂 Behavior 且設為預設流程 , 

@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.Threading;
 using System.Threading.Tasks;
 
-namespace MediatR.PipelineExtensions.Models
+namespace MediatR.MetadataBehavior.Models
 {
     public interface IMetadataBehaviorFactory<TRequest, TResponse> :
        IPipelineBehavior<TRequest, TResponse>

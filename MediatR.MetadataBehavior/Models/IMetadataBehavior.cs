@@ -1,7 +1,7 @@
 ﻿using System.Threading;
 using System.Threading.Tasks;
 
-namespace MediatR.PipelineExtensions.Models
+namespace MediatR.MetadataBehavior.Models
 {
     /// <summary>
     /// 自訂流程 Behavior 的介面

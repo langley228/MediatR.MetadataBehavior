@@ -4,11 +4,11 @@ using System.Linq;
 using System.Reflection;
 using System.Threading;
 using System.Threading.Tasks;
-using MediatR.PipelineExtensions.Attributes;
-using MediatR.PipelineExtensions.Helpers;
+using MediatR.MetadataBehavior.Attributes;
+using MediatR.MetadataBehavior.Extensions;
 using Microsoft.Extensions.DependencyInjection;
 
-namespace MediatR.PipelineExtensions.Models
+namespace MediatR.MetadataBehavior.Models
 {
     public abstract class MetadataBehaviorFactory<TRequest, TResponse> :
            IMetadataBehaviorFactory<TRequest, TResponse>

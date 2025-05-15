@@ -1,9 +1,9 @@
 ﻿using System;
 using System.Runtime.CompilerServices;
-using MediatR.PipelineExtensions.Models;
+using MediatR.MetadataBehavior.Models;
 using Microsoft.Extensions.DependencyInjection;
 
-namespace MediatR.PipelineExtensions.Attributes
+namespace MediatR.MetadataBehavior.Attributes
 {
     /// <summary>
     /// 設置使用 Metadata Behavior 方式 的 Mediatr Request, 
