@@ -18,46 +18,42 @@ MediatR.MetadataBehavior 是一個基於 MediatR 的擴展，用於實現基於 
 #### 範例 1：直接定義行為
 ```csharp
 [Request]
-[DefaultMetadata(typeof(CustomBehavior1<>))]
-[Metadata(typeof(CustomBehavior2<>), isDefault: false)]
-public class MyRequest : IRequest<MyResponse>
+[DefaultMetadata(typeof(LoggingBehavior<,>))]
+[Metadata(typeof(ValidationBehavior<,>), isDefault: false)]
+public class DefaultRequest : IRequest<MyResponse>
 {
-    // 請求屬性
 }
 ```
 
 #### 範例 2：使用 Metadata 類型
 ```csharp
-[Request(metadataType: typeof(MyRequestMetadata))]
-public class MyRequest : IRequest<MyResponse>
+[Request(metadataType: typeof(RequestMetadata))]
+public class DefaultRequest : IRequest<MyResponse>
 {
-    // 請求屬性
 }
 
-[DefaultMetadata(typeof(CustomBehavior1<>))]
-[Metadata(typeof(CustomBehavior2<>), isDefault: false)]
-public class MyRequestMetadata 
+[DefaultMetadata(typeof(LoggingBehavior<,>))]
+[Metadata(typeof(ValidationBehavior<,>), isDefault: false)]
+public class RequestMetadata
 {
-    // Metadata 定義
 }
 ```
 
 #### 範例 3：自訂行為工廠
 ```csharp
 [Request(
-        behaviorFactoryGenericType: typeof(MyMetadataBehaviorFactory<,>),
-        metadataType: typeof(MyRequestMetadata),
+        behaviorFactoryGenericType: typeof(CustomBehaviorFactory<,>),
+        metadataType: typeof(RequestMetadata),
         canUseDefault: true)]
-public class MyRequest : IRequest<MyResponse>
+public class CustomRequest : IRequest<MyResponse>
 {
-    // 請求屬性
+    public string[] BehaviorNames { get; set; }
 }
 
-[DefaultMetadata(typeof(CustomBehavior1<>))]
-[Metadata(typeof(CustomBehavior2<>), isDefault: false)]
-public class MyRequestMetadata 
+[DefaultMetadata(typeof(LoggingBehavior<,>))]
+[Metadata(typeof(ValidationBehavior<,>), isDefault: false)]
+public class RequestMetadata
 {
-    // Metadata 定義
 }
 ```
 
@@ -68,7 +64,12 @@ public class MyRequestMetadata
 使用 `ServiceCollectionHelper` 註冊行為：
 
 ```csharp
-services.AddMediatRMetadataBehavior(typeof(MyRequest).Assembly);
+// 註冊 MediatR  
+services.AddMediatR(cfg => cfg.RegisterServicesFromAssembly(Assembly.GetExecutingAssembly()));
+
+// 註冊 Metadata 行為  
+services.AddMediatRMetadataBehavior(Assembly.GetExecutingAssembly());
+
 ```
 
 ---
@@ -78,7 +79,7 @@ services.AddMediatRMetadataBehavior(typeof(MyRequest).Assembly);
 實現 `IMetadataBehavior<TRequest, TResponse>` 接口來定義行為邏輯：
 
 ```csharp
-public class MyCustomBehavior<TRequest, TResponse> : 
+public class LoggingBehavior<TRequest, TResponse> : 
     IMetadataBehavior<TRequest, TResponse>
     where TRequest : IRequest<TResponse>
 {
@@ -87,8 +88,10 @@ public class MyCustomBehavior<TRequest, TResponse> :
         RequestHandlerDelegate<TResponse> next, 
         CancellationToken cancellationToken)
     {
-        // 自訂邏輯
-        return await next();
+        Console.WriteLine($"[Logging] Handling request: {typeof(TRequest).Name}");
+        var response = await next();
+        Console.WriteLine($"[Logging] Finished handling request: {typeof(TRequest).Name}");
+        return response;
     }
 }
 ```
@@ -100,11 +103,11 @@ public class MyCustomBehavior<TRequest, TResponse> :
 如果需要自訂行為工廠，繼承 `MetadataBehaviorFactory<TRequest, TResponse>` 並實現 `MappingBehaviors` 方法。例如：
 
 ```csharp
-public class MyMetadataBehaviorFactory<TRequest, TResponse> :
+public class CustomBehaviorFactory<TRequest, TResponse> :
     MetadataBehaviorFactory<TRequest, TResponse>
     where TRequest : IRequest<TResponse>
 {
-    public MyMetadataBehaviorFactory(
+    public CustomBehaviorFactory(
         IServiceProvider serviceProvider) : base(serviceProvider)
     {
     }
@@ -112,20 +115,28 @@ public class MyMetadataBehaviorFactory<TRequest, TResponse> :
     public override Task<TResponse> MappingBehaviors(
         TRequest request,
         IEnumerable<IMetadataBehavior<TRequest, TResponse>> behaviors,
-        Func<IEnumerable<IMetadataBehavior<TRequest, TResponse>>, CancellationToken, Task<TResponse>> next, CancellationToken cancellationToken)
+        Func<IEnumerable<IMetadataBehavior<TRequest, TResponse>>, CancellationToken, Task<TResponse>> next, 
+        CancellationToken cancellationToken)
     {
-        // 自訂流程
-        var behaviorNames = new List<string> 
-        { 
-            "CustomBehavior2",
-            "CustomBehavior1"
-        };
-        var findBehaviors = behaviorNames.Select(name => behaviors.FirstOrDefault(b => GetBehaviorName(b.GetType()) == name));
+        string[] behaviorNames = null;
+
+        // 自訂流程：檢查請求是否為 SampleRequest，並提取行為名稱
+        if (request is Models.CustomRequest sampleRequest)
+        {
+            behaviorNames = sampleRequest.BehaviorNames;
+        }
+
+        // 根據行為名稱篩選對應的行為
+        var findBehaviors = behaviorNames.Select(name => 
+            behaviors.FirstOrDefault(b => GetBehaviorName(b.GetType()) == name));
+
+        // 執行篩選後的行為集合
         return next(findBehaviors, cancellationToken);
-    }    
-    
+    }
+
     private string GetBehaviorName(Type type)
     {
+        // 如果是泛型類型，去除泛型參數部分
         if (type.IsGenericType)
             return $"{type.Name.Substring(0, type.Name.IndexOf("`"))}";
         else
